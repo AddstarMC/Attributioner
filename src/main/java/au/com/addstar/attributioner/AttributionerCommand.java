@@ -27,12 +27,11 @@ public class AttributionerCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!sender.hasPermission("attributioner.admin")) {
+            sender.sendMessage("\u00a7cYou do not have permission to use this command.");
+            return true;
+        }
         if (args.length > 0 && args[0].equalsIgnoreCase("regions")) {
-            if (!sender.hasPermission("attributioner.reload")) {
-                sender.sendMessage("\u00a7cYou do not have permission to use this command.");
-                return true;
-            }
-
             if (plugin.getRegionModifiers().isEmpty()) {
                 sender.sendMessage("\u00a7eNo region attributes configured.");
                 return true;
@@ -46,21 +45,11 @@ public class AttributionerCommand implements CommandExecutor {
                 }
             }
         } else if (args.length > 0 && args[0].equalsIgnoreCase("debug")) {
-            if (!sender.hasPermission("attributioner.reload")) {
-                sender.sendMessage("\u00a7cYou do not have permission to use this command.");
-                return true;
-            }
-
             // Toggle debug logging
             Level newLevel = plugin.getLogger().getLevel() == Level.FINE ? Level.INFO : Level.FINE;
             plugin.getLogger().setLevel(newLevel);
             sender.sendMessage(newLevel == Level.FINE ? "\u00a7aDebug logging enabled." : "\u00a7eDebug logging disabled.");
         } else if (args.length > 0 && args[0].equalsIgnoreCase("info")) {
-            if (!sender.hasPermission("attributioner.reload")) {
-                sender.sendMessage("\u00a7cYou do not have permission to use this command.");
-                return true;
-            }
-
             if (args.length < 2) {
                 sender.sendMessage("\u00a7cUsage: /attributioner info <player>");
                 return true;
@@ -88,11 +77,6 @@ public class AttributionerCommand implements CommandExecutor {
                 sender.sendMessage("  None");
             }
         } else if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
-            if (!sender.hasPermission("attributioner.reload")) {
-                sender.sendMessage("\u00a7cYou do not have permission to use this command.");
-                return true;
-            }
-
             // Reload the plugin configuration
             plugin.reloadConfig();
             plugin.loadConfig();
