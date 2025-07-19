@@ -1,0 +1,10 @@
+name: Attributioner
+main: au.com.addstar.attributioner.Attributioner
+version: 1.0
+api-version: '1.21'
+depend: [WorldGuard, RegionEvents]
+commands:
+  attributioner:
+    description: Reload Attributioner config
+    permission: attributioner.reload
+    usage: /attributioner reload
