@@ -6,6 +6,7 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
+import java.util.logging.Level;
 
 public class AttributeManager {
     private final Attributioner plugin;
@@ -22,6 +23,7 @@ public class AttributeManager {
             AttributeInstance instance = player.getAttribute(entry.getKey());
             if (instance != null && instance.getModifier(entry.getValue().getKey()) == null) {
                 instance.addModifier(entry.getValue());
+                plugin.getLogger().log(Level.FINE, "Applied {0} to {1} in region {2}", new Object[]{entry.getKey(), player.getName(), regionName});
             }
         }
     }
@@ -34,6 +36,7 @@ public class AttributeManager {
             AttributeInstance instance = player.getAttribute(entry.getKey());
             if (instance != null && instance.getModifier(entry.getValue().getKey()) != null) {
                 instance.removeModifier(entry.getValue().getKey());
+                plugin.getLogger().log(Level.FINE, "Removed {0} from {1} in region {2}", new Object[]{entry.getKey(), player.getName(), regionName});
             }
         }
     }
