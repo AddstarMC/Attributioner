@@ -23,7 +23,8 @@ public class AttributeManager {
             AttributeInstance instance = player.getAttribute(entry.getKey());
             if (instance != null && instance.getModifier(entry.getValue().getKey()) == null) {
                 instance.addModifier(entry.getValue());
-                plugin.getLogger().log(Level.FINE, "Applied {0} to {1} in region {2}", new Object[]{entry.getKey(), player.getName(), regionName});
+                plugin.debugMsg(String.format("Applied %s to %s in region %s",
+                        entry.getKey(), player.getName(), regionName));
             }
         }
     }
@@ -36,7 +37,8 @@ public class AttributeManager {
             AttributeInstance instance = player.getAttribute(entry.getKey());
             if (instance != null && instance.getModifier(entry.getValue().getKey()) != null) {
                 instance.removeModifier(entry.getValue().getKey());
-                plugin.getLogger().log(Level.FINE, "Removed {0} from {1} in region {2}", new Object[]{entry.getKey(), player.getName(), regionName});
+                plugin.debugMsg(String.format("Removed %s from %s in region %s",
+                        entry.getKey(), player.getName(), regionName));
             }
         }
     }

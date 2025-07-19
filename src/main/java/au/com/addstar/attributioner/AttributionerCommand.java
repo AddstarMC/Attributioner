@@ -46,9 +46,8 @@ public class AttributionerCommand implements CommandExecutor {
             }
         } else if (args.length > 0 && args[0].equalsIgnoreCase("debug")) {
             // Toggle debug logging
-            Level newLevel = plugin.getLogger().getLevel() == Level.FINE ? Level.INFO : Level.FINE;
-            plugin.getLogger().setLevel(newLevel);
-            sender.sendMessage(newLevel == Level.FINE ? "\u00a7aDebug logging enabled." : "\u00a7eDebug logging disabled.");
+            plugin.setebugMode(!plugin.isDebugMode());
+            sender.sendMessage(plugin.isDebugMode() ? "\u00a7aDebug logging enabled." : "\u00a7eDebug logging disabled.");
         } else if (args.length > 0 && args[0].equalsIgnoreCase("info")) {
             if (args.length < 2) {
                 sender.sendMessage("\u00a7cUsage: /attributioner info <player>");
