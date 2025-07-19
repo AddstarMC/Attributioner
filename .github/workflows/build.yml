@@ -29,12 +29,16 @@ jobs:
           VERSION=$(grep -m1 "^version" build.gradle | cut -d"'" -f2)
           echo "Extract build version: ${VERSION}"
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+      - name: Set release version
+        id: release_version
+        run: |
+          echo "release=${{ steps.get_version.outputs.version }}.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
       - name: Create GitHub Release
         if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: "v${{ steps.get_version.outputs.version }}-${{ github.run_number }}"
-          name: "Release v${{ steps.get_version.outputs.version }} build ${{ github.run_number }}"
+          tag_name: "v${{ steps.release_version.outputs.release }}"
+          name: "Release v${{ steps.release_version.outputs.release }}"
           files: build/libs/*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
