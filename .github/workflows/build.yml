@@ -25,7 +25,9 @@ jobs:
           path: build/libs/*.jar
       - name: Extract version
         id: get_version
-        run: echo "version=$(awk -F\"'\" '/^version/ {print $2; exit}' build.gradle)" >> $GITHUB_OUTPUT
+        run: |
+          VERSION=$(grep -m1 "^version" build.gradle | cut -d"'" -f2)
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
       - name: Create GitHub Release
         if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
