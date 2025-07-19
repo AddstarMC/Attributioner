@@ -23,9 +23,14 @@ public class Attributioner extends JavaPlugin implements Listener {
         loadConfig();
 
         AttributeManager manager = new AttributeManager(this);
-        getServer().getPluginManager().registerEvents(new RegionListener(this, manager), this);
         getServer().getPluginManager().registerEvents(this, this);
         getCommand("attributioner").setExecutor(new AttributionerCommand(this, manager));
+        if (getServer().getPluginManager().isPluginEnabled("RegionEvents")) {
+            getLogger().info("RegionEvents plugin found, registering region listener.");
+            getServer().getPluginManager().registerEvents(new RegionListener(this, manager), this);
+        } else {
+            getLogger().warning("RegionEvents plugin not loaded, region-based attribute modifiers will not work.");
+        }
     }
 
     public void loadConfig() {

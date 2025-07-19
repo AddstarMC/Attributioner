@@ -37,7 +37,7 @@ public class AttributionerCommand implements CommandExecutor {
             for (Map.Entry<String, Map<org.bukkit.attribute.Attribute, org.bukkit.attribute.AttributeModifier>> entry : plugin.getRegionModifiers().entrySet()) {
                 sender.sendMessage("\u00a7aRegion \u00a7f" + entry.getKey());
                 for (org.bukkit.attribute.Attribute attr : entry.getValue().keySet()) {
-                    sender.sendMessage("  - " + attr.name());
+                    sender.sendMessage("  - " + attr);
                 }
             }
             return true;

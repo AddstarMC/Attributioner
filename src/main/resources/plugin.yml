@@ -2,7 +2,7 @@ name: Attributioner
 main: au.com.addstar.attributioner.Attributioner
 version: 1.0
 api-version: '1.21'
-depend: [WorldGuard, RegionEvents]
+softdepend: [WorldGuard, RegionEvents]
 commands:
   attributioner:
     description: Admin commands for Attributioner
