@@ -13,9 +13,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
+import java.util.logging.Level;
 
 public class Attributioner extends JavaPlugin implements Listener {
     private final Map<String, Map<Attribute, AttributeModifier>> regionModifiers = new HashMap<>();
+    private boolean debugMode = false;
 
     @Override
     public void onEnable() {
@@ -30,6 +32,20 @@ public class Attributioner extends JavaPlugin implements Listener {
             getServer().getPluginManager().registerEvents(new RegionListener(this, manager), this);
         } else {
             getLogger().warning("RegionEvents plugin not loaded, region-based attribute modifiers will not work.");
+        }
+    }
+
+    public boolean isDebugMode() {
+        return debugMode;
+    }
+
+    public void setebugMode(boolean debug) {
+        debugMode = debug;
+    }
+
+    public void debugMsg(String message) {
+        if (debugMode) {
+            getLogger().info("[DEBUG] " + message);
         }
     }
 
@@ -87,12 +103,14 @@ public class Attributioner extends JavaPlugin implements Listener {
     }
 
     public void clearAttrModifiers(Player player) {
+        debugMsg("Clearing custom modifiers for " + player.getName());
         for (Attribute attribute : Attribute.values()) {
             AttributeInstance instance = player.getAttribute(attribute);
             if (instance == null) continue;
             for (AttributeModifier modifier : instance.getModifiers()) {
                 if (modifier.getKey() != null && modifier.getKey().getNamespace().startsWith("attributioner-")) {
                     instance.removeModifier(modifier);
+                    debugMsg("Removed " + attribute + " modifier " + modifier.getKey() + " for player " + player.getName());
                 }
             }
         }
