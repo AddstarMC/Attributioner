@@ -7,4 +7,4 @@ commands:
   attributioner:
     description: Admin commands for Attributioner
     permission: attributioner.reload
-    usage: /attributioner <reload|debug>
+    usage: /attributioner <reload|regions|debug>

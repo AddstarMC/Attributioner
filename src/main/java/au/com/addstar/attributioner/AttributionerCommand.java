@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 public class AttributionerCommand implements CommandExecutor {
     private final Attributioner plugin;
@@ -23,7 +24,7 @@ public class AttributionerCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (args.length > 0 && args[0].equalsIgnoreCase("debug")) {
+        if (args.length > 0 && args[0].equalsIgnoreCase("regions")) {
             if (!sender.hasPermission("attributioner.reload")) {
                 sender.sendMessage("\u00a7cYou do not have permission to use this command.");
                 return true;
@@ -40,6 +41,17 @@ public class AttributionerCommand implements CommandExecutor {
                     sender.sendMessage("  - " + attr);
                 }
             }
+            return true;
+
+        } else if (args.length > 0 && args[0].equalsIgnoreCase("debug")) {
+            if (!sender.hasPermission("attributioner.reload")) {
+                sender.sendMessage("\u00a7cYou do not have permission to use this command.");
+                return true;
+            }
+
+            Level newLevel = plugin.getLogger().getLevel() == Level.FINE ? Level.INFO : Level.FINE;
+            plugin.getLogger().setLevel(newLevel);
+            sender.sendMessage(newLevel == Level.FINE ? "\u00a7aDebug logging enabled." : "\u00a7eDebug logging disabled.");
             return true;
         }
 
