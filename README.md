@@ -26,20 +26,17 @@ Example `config.yml`:
 
 ```yaml
 regions:
-  - name: low_gravity_zone
-    modifiers:
-      gravity:
-        amount: -0.05
-        operation: ADD_NUMBER
-
-  - name: fast_zone
-    modifiers:
-      movement_speed:
-        amount: 0.1
-        operation: MULTIPLY_SCALAR_1
+  low_gravity_zone:
+    gravity:
+      amount: -0.05
+      operation: ADD_NUMBER
+  fast_zone:
+    movement_speed:
+      amount: 0.1
+      operation: MULTIPLY_SCALAR_1
 ```
 
-Each entry under `regions` corresponds to a WorldGuard region by ID. When a player is within that region, the listed attribute modifiers are applied. Attributes are removed when the player leaves the region or when the plugin reloads.
+Each key under `regions` corresponds to a WorldGuard region by ID. When a player is within that region, the listed attribute modifiers are applied. Attributes are removed when the player leaves the region or when the plugin reloads.
 
 ## Usage
 

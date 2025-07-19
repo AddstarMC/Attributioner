@@ -35,14 +35,16 @@ public class Attributioner extends JavaPlugin implements Listener {
 
     public void loadConfig() {
         regionModifiers.clear();
-        List<Map<?, ?>> regions = getConfig().getMapList("regions");
 
-        for (int i = 0; i < regions.size(); i++) {
-            Map<?, ?> entry = regions.get(i);
-            String regionName = (String) entry.get("name");
-            if (regionName == null || !entry.containsKey("modifiers")) continue;
+        ConfigurationSection regions = getConfig().getConfigurationSection("regions");
+        if (regions == null) {
+            return;
+        }
 
-            ConfigurationSection section = getConfig().getConfigurationSection("regions." + i + ".modifiers");
+        for (String regionName : regions.getKeys(false)) {
+            ConfigurationSection section = regions.getConfigurationSection(regionName);
+            if (section == null) continue;
+
             Map<Attribute, AttributeModifier> modifiers = new HashMap<>();
 
             for (String attrName : section.getKeys(false)) {
@@ -53,7 +55,6 @@ public class Attributioner extends JavaPlugin implements Listener {
                     AttributeModifier.Operation op = AttributeModifier.Operation.valueOf(opStr);
 
                     NamespacedKey modKey = new NamespacedKey("attributioner-" + regionName.toLowerCase(), attrName.toLowerCase());
-                    //"Attributioner-" + regionName + "-" + attrName,
                     AttributeModifier modifier = new AttributeModifier(
                             modKey,
                             amount,

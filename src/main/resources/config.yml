@@ -1,12 +1,9 @@
 regions:
-  - name: low_gravity_zone
-    modifiers:
-      gravity:
-        amount: -0.05
-        operation: ADD_NUMBER
-
-  - name: fast_zone
-    modifiers:
-      movement_speed:
-        amount: 0.1
-        operation: MULTIPLY_SCALAR_1
+  low_gravity_zone:
+    gravity:
+      amount: -0.05
+      operation: ADD_NUMBER
+  fast_zone:
+    movement_speed:
+      amount: 0.1
+      operation: MULTIPLY_SCALAR_1
