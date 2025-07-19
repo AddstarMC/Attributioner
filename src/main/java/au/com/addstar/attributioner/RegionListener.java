@@ -10,6 +10,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.util.logging.Level;
+
 import java.util.Set;
 
 public class RegionListener implements Listener {
@@ -39,6 +41,8 @@ public class RegionListener implements Listener {
     public void onRegionEnter(RegionEnteredEvent event) {
         String id = event.region().getId();
         if (plugin.getRegionModifiers().containsKey(id)) {
+            plugin.getLogger().log(Level.FINE, "{0} entered region {1}, applying {2}",
+                    new Object[]{event.player().getName(), id, plugin.getRegionModifiers().get(id).keySet()});
             manager.applyModifiers(event.player(), id);
         }
     }
@@ -47,6 +51,8 @@ public class RegionListener implements Listener {
     public void onRegionLeave(RegionQuitEvent event) {
         String id = event.region().getId();
         if (plugin.getRegionModifiers().containsKey(id)) {
+            plugin.getLogger().log(Level.FINE, "{0} left region {1}, removing {2}",
+                    new Object[]{event.player().getName(), id, plugin.getRegionModifiers().get(id).keySet()});
             manager.removeModifiers(event.player(), id);
         }
     }

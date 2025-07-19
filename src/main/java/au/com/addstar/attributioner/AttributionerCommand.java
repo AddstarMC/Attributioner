@@ -7,6 +7,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -52,6 +55,38 @@ public class AttributionerCommand implements CommandExecutor {
             Level newLevel = plugin.getLogger().getLevel() == Level.FINE ? Level.INFO : Level.FINE;
             plugin.getLogger().setLevel(newLevel);
             sender.sendMessage(newLevel == Level.FINE ? "\u00a7aDebug logging enabled." : "\u00a7eDebug logging disabled.");
+        } else if (args.length > 0 && args[0].equalsIgnoreCase("info")) {
+            if (!sender.hasPermission("attributioner.reload")) {
+                sender.sendMessage("\u00a7cYou do not have permission to use this command.");
+                return true;
+            }
+
+            if (args.length < 2) {
+                sender.sendMessage("\u00a7cUsage: /attributioner info <player>");
+                return true;
+            }
+
+            Player target = Bukkit.getPlayer(args[1]);
+            if (target == null) {
+                sender.sendMessage("\u00a7cPlayer not found.");
+                return true;
+            }
+
+            sender.sendMessage("\u00a7aCustom modifiers for \u00a7f" + target.getName() + ":");
+            boolean found = false;
+            for (Attribute attr : Attribute.values()) {
+                AttributeInstance inst = target.getAttribute(attr);
+                if (inst == null) continue;
+                for (AttributeModifier mod : inst.getModifiers()) {
+                    if (mod.getKey() != null && mod.getKey().getNamespace().startsWith("attributioner-")) {
+                        sender.sendMessage("  " + attr + " -> " + mod.getAmount() + " " + mod.getOperation() + " (" + mod.getKey() + ")");
+                        found = true;
+                    }
+                }
+            }
+            if (!found) {
+                sender.sendMessage("  None");
+            }
         } else if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
             if (!sender.hasPermission("attributioner.reload")) {
                 sender.sendMessage("\u00a7cYou do not have permission to use this command.");
@@ -68,7 +103,7 @@ public class AttributionerCommand implements CommandExecutor {
                 plugin.clearAttrModifiers(player);
             }
         } else {
-            sender.sendMessage("\u00a7cUsage: /attributioner <regions|debug|reload>");
+            sender.sendMessage("\u00a7cUsage: /attributioner <regions|debug|info|reload>");
         }
         return true;
     }

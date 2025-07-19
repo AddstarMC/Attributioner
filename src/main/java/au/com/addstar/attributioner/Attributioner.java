@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
+import java.util.logging.Level;
 
 public class Attributioner extends JavaPlugin implements Listener {
     private final Map<String, Map<Attribute, AttributeModifier>> regionModifiers = new HashMap<>();
@@ -87,12 +88,15 @@ public class Attributioner extends JavaPlugin implements Listener {
     }
 
     public void clearAttrModifiers(Player player) {
+        getLogger().log(Level.FINE, "Clearing custom modifiers for {0}", player.getName());
         for (Attribute attribute : Attribute.values()) {
             AttributeInstance instance = player.getAttribute(attribute);
             if (instance == null) continue;
             for (AttributeModifier modifier : instance.getModifiers()) {
                 if (modifier.getKey() != null && modifier.getKey().getNamespace().startsWith("attributioner-")) {
                     instance.removeModifier(modifier);
+                    getLogger().log(Level.FINE, "Removed {0} from attribute {1} for {2}",
+                            new Object[]{modifier.getKey(), attribute, player.getName()});
                 }
             }
         }
