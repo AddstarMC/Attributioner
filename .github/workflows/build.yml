@@ -27,6 +27,7 @@ jobs:
         id: get_version
         run: |
           VERSION=$(grep -m1 "^version" build.gradle | cut -d"'" -f2)
+          echo "Extract build version: ${VERSION}"
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
       - name: Create GitHub Release
         if: github.ref == 'refs/heads/main'
