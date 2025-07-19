@@ -1,9 +1,14 @@
-regions:
-  low_gravity_zone:
-    gravity:
-      amount: -0.05
-      operation: ADD_NUMBER
-  fast_zone:
-    movement_speed:
-      amount: 0.1
-      operation: MULTIPLY_SCALAR_1
+#
+# Available attributes: https://jd.papermc.io/paper/1.21.8/org/bukkit/attribute/Attribute.html
+# Available operations:
+#   ADD_NUMBER: Adds a number to the current value
+#   ADD_SCALAR: Adds a scalar to the current value
+#   MULTIPLY_SCALAR_1: Multiplies the current value by a scalar
+#
+# Example config:
+# regions:
+#  low_gravity_zone:
+#    gravity:
+#      amount: -0.05
+#      operation: ADD_NUMBER
+#
