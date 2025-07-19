@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Set;
 
 public class AttributionerCommand implements CommandExecutor {
@@ -22,6 +23,26 @@ public class AttributionerCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (args.length > 0 && args[0].equalsIgnoreCase("debug")) {
+            if (!sender.hasPermission("attributioner.reload")) {
+                sender.sendMessage("\u00a7cYou do not have permission to use this command.");
+                return true;
+            }
+
+            if (plugin.getRegionModifiers().isEmpty()) {
+                sender.sendMessage("\u00a7eNo region attributes configured.");
+                return true;
+            }
+
+            for (Map.Entry<String, Map<org.bukkit.attribute.Attribute, org.bukkit.attribute.AttributeModifier>> entry : plugin.getRegionModifiers().entrySet()) {
+                sender.sendMessage("\u00a7aRegion \u00a7f" + entry.getKey());
+                for (org.bukkit.attribute.Attribute attr : entry.getValue().keySet()) {
+                    sender.sendMessage("  - " + attr.name());
+                }
+            }
+            return true;
+        }
+
         if (!sender.hasPermission("attributioner.reload")) {
             sender.sendMessage("\u00a7cYou do not have permission to use this command.");
             return true;

@@ -8,6 +8,7 @@ Attributioner is a Paper plugin that manages player attributes. It applies attri
 - Attributes added by regions use namespaced keys in the format `attributioner-<region>` to avoid conflicts.
 - Manual attribute management API via `AttributeManager` for use by other plugins.
 - `/attributioner reload` command reloads the configuration and reapplies region modifiers for online players.
+- `/attributioner debug` lists all regions and their configured attributes for quick debugging.
 
 ## Building
 
@@ -46,5 +47,6 @@ Each entry under `regions` corresponds to a WorldGuard region by ID. When a play
 2. Place the built Attributioner JAR in the `plugins` directory and start the server.
 3. Edit the generated `config.yml` to define your regions and attribute modifiers.
 4. Use `/attributioner reload` to reload the configuration without restarting the server.
+5. Use `/attributioner debug` to list all configured region attributes.
 
 Attributes added programmatically or by regions share the same key prefix (`attributioner-<region>`), ensuring they can be safely removed when needed.
