@@ -35,46 +35,41 @@ public class AttributionerCommand implements CommandExecutor {
                 return true;
             }
 
+            // List all regions with their attribute modifiers
             for (Map.Entry<String, Map<org.bukkit.attribute.Attribute, org.bukkit.attribute.AttributeModifier>> entry : plugin.getRegionModifiers().entrySet()) {
                 sender.sendMessage("\u00a7aRegion \u00a7f" + entry.getKey());
                 for (org.bukkit.attribute.Attribute attr : entry.getValue().keySet()) {
                     sender.sendMessage("  - " + attr);
                 }
             }
-            return true;
-
         } else if (args.length > 0 && args[0].equalsIgnoreCase("debug")) {
             if (!sender.hasPermission("attributioner.reload")) {
                 sender.sendMessage("\u00a7cYou do not have permission to use this command.");
                 return true;
             }
 
+            // Toggle debug logging
             Level newLevel = plugin.getLogger().getLevel() == Level.FINE ? Level.INFO : Level.FINE;
             plugin.getLogger().setLevel(newLevel);
             sender.sendMessage(newLevel == Level.FINE ? "\u00a7aDebug logging enabled." : "\u00a7eDebug logging disabled.");
-            return true;
-        }
-
-        if (!sender.hasPermission("attributioner.reload")) {
-            sender.sendMessage("\u00a7cYou do not have permission to use this command.");
-            return true;
-        }
-
-        plugin.reloadConfig();
-        plugin.loadConfig();
-        sender.sendMessage("\u00a7aAttributioner config reloaded.");
-
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            plugin.clearAttrModifiers(player);
-            Set<ProtectedRegion> regions = RegionHelper.searchAtLocation(player.getWorld(), player.getLocation());
-            for (ProtectedRegion region : regions) {
-                String id = region.getId();
-                if (plugin.getRegionModifiers().containsKey(id)) {
-                    manager.applyModifiers(player, id);
-                }
+        } else if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
+            if (!sender.hasPermission("attributioner.reload")) {
+                sender.sendMessage("\u00a7cYou do not have permission to use this command.");
+                return true;
             }
-        }
 
+            // Reload the plugin configuration
+            plugin.reloadConfig();
+            plugin.loadConfig();
+            sender.sendMessage("\u00a7aAttributioner config reloaded.");
+
+            // Clear all attribute modifiers for online players
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                plugin.clearAttrModifiers(player);
+            }
+        } else {
+            sender.sendMessage("\u00a7cUsage: /attributioner <regions|debug|reload>");
+        }
         return true;
     }
 }
