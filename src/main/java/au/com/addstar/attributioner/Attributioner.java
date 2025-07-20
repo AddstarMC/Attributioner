@@ -15,9 +15,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.*;
 import java.util.logging.Level;
 
+// WorldGuard region polling
+import au.com.addstar.attributioner.RegionListener;
+
 public class Attributioner extends JavaPlugin implements Listener {
     private final Map<String, Map<Attribute, AttributeModifier>> regionModifiers = new HashMap<>();
     private boolean debugMode = false;
+    private RegionListener regionListener;
 
     @Override
     public void onEnable() {
@@ -27,11 +31,17 @@ public class Attributioner extends JavaPlugin implements Listener {
         AttributeManager manager = new AttributeManager(this);
         getServer().getPluginManager().registerEvents(this, this);
         getCommand("attributioner").setExecutor(new AttributionerCommand(this, manager));
-        if (getServer().getPluginManager().isPluginEnabled("RegionEvents")) {
-            getLogger().info("RegionEvents plugin found, registering region listener.");
-            getServer().getPluginManager().registerEvents(new RegionListener(this, manager), this);
-        } else {
-            getLogger().warning("RegionEvents plugin not loaded, region-based attribute modifiers will not work.");
+
+        RegionListener listener = new RegionListener(this, manager, 20L);
+        getServer().getPluginManager().registerEvents(listener, this);
+        listener.start();
+        this.regionListener = listener;
+    }
+
+    @Override
+    public void onDisable() {
+        if (regionListener != null) {
+            regionListener.stop();
         }
     }
 

@@ -1,7 +1,5 @@
 package au.com.addstar.attributioner;
 
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import io.github.aivruu.regionevents.util.RegionHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,8 +11,6 @@ import org.bukkit.attribute.AttributeModifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
 
 public class AttributionerCommand implements CommandExecutor {
     private final Attributioner plugin;

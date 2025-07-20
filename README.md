@@ -11,6 +11,7 @@ Attributioner is a Paper plugin that manages player attributes. It applies attri
 - `/attributioner regions` lists all regions and their configured attributes for quick debugging.
 - `/attributioner debug` toggles debug logging on or off.
 - `/attributioner info <player>` shows all custom attribute modifiers applied to the given player.
+- Automatically monitors online players every second to detect WorldGuard region changes.
 
 ## Building
 
@@ -42,7 +43,7 @@ Each key under `regions` corresponds to a WorldGuard region by ID. When a player
 
 ## Usage
 
-1. Install WorldGuard and RegionEvents on your Paper server.
+1. Install WorldGuard on your Paper server.
 2. Place the built Attributioner JAR in the `plugins` directory and start the server.
 3. Edit the generated `config.yml` to define your regions and attribute modifiers.
 4. Use `/attributioner reload` to reload the configuration without restarting the server.
