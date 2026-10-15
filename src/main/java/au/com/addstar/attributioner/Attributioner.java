@@ -22,6 +22,7 @@ public class Attributioner extends JavaPlugin implements Listener {
     private final Map<String, Map<Attribute, AttributeModifier>> regionModifiers = new HashMap<>();
     private boolean debugMode = false;
     private RegionListener regionListener;
+    private AttributeManager attributeManager;
 
     @Override
     public void onEnable() {
@@ -29,8 +30,11 @@ public class Attributioner extends JavaPlugin implements Listener {
         loadConfig();
 
         AttributeManager manager = new AttributeManager(this);
+        this.attributeManager = manager;
         getServer().getPluginManager().registerEvents(this, this);
-        getCommand("attributioner").setExecutor(new AttributionerCommand(this, manager));
+        AttributionerCommand command = new AttributionerCommand(this, manager);
+        getCommand("attributioner").setExecutor(command);
+        getCommand("attributioner").setTabCompleter(command);
 
         RegionListener listener = new RegionListener(this, manager, 20L);
         getServer().getPluginManager().registerEvents(listener, this);
@@ -42,6 +46,9 @@ public class Attributioner extends JavaPlugin implements Listener {
     public void onDisable() {
         if (regionListener != null) {
             regionListener.stop();
+        }
+        if (attributeManager != null) {
+            attributeManager.clearAllTimed();
         }
     }
 
@@ -74,13 +81,17 @@ public class Attributioner extends JavaPlugin implements Listener {
             Map<Attribute, AttributeModifier> modifiers = new HashMap<>();
 
             for (String attrName : section.getKeys(false)) {
+                Attribute attribute = AttributeManager.lookupAttribute(attrName);
+                if (attribute == null) {
+                    getLogger().warning("Invalid attribute name: " + attrName + " in region " + regionName);
+                    continue;
+                }
                 try {
-                    Attribute attribute = Attribute.valueOf(attrName.toUpperCase());
                     double amount = section.getDouble(attrName + ".amount");
                     String opStr = section.getString(attrName + ".operation");
                     AttributeModifier.Operation op = AttributeModifier.Operation.valueOf(opStr);
 
-                    NamespacedKey modKey = new NamespacedKey("attributioner-" + regionName.toLowerCase(), attrName.toLowerCase());
+                    NamespacedKey modKey = new NamespacedKey("attributioner-" + regionName.toLowerCase(), attribute.getKey().getKey());
                     AttributeModifier modifier = new AttributeModifier(
                             modKey,
                             amount,
@@ -88,7 +99,7 @@ public class Attributioner extends JavaPlugin implements Listener {
                     );
                     modifiers.put(attribute, modifier);
                 } catch (IllegalArgumentException e) {
-                    getLogger().warning("Invalid attribute name: " + attrName + " in region " + regionName);
+                    getLogger().warning("Invalid modifier for " + attrName + " in region " + regionName + ": " + e.getMessage());
                 }
             }
 
@@ -109,12 +120,13 @@ public class Attributioner extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
+        attributeManager.cancelTimed(event.getPlayer().getUniqueId());
         clearAttrModifiers(event.getPlayer());
     }
 
     public void clearAttrModifiers(Player player) {
         debugMsg("Clearing custom modifiers for " + player.getName());
-        for (Attribute attribute : Attribute.values()) {
+        for (Attribute attribute : AttributeManager.attributeRegistry()) {
             AttributeInstance instance = player.getAttribute(attribute);
             if (instance == null) continue;
             for (AttributeModifier modifier : instance.getModifiers()) {

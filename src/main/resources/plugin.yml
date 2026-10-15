@@ -6,5 +6,9 @@ softdepend: [WorldGuard]
 commands:
   attributioner:
     description: Admin commands for Attributioner
-    permission: attributioner.reload
-    usage: /attributioner <reload|regions|debug|info>
+    permission: attributioner.admin
+    usage: /attributioner <reload|regions|debug|info|timed|apply|remove>
+permissions:
+  attributioner.admin:
+    description: Allows use of all /attributioner commands
+    default: op
